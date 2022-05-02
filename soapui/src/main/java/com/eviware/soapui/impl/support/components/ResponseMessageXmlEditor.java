@@ -25,6 +25,7 @@ import com.eviware.soapui.support.editor.registry.InspectorFactory;
 import com.eviware.soapui.support.editor.registry.InspectorRegistry;
 import com.eviware.soapui.support.editor.registry.ResponseEditorViewFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
+import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
@@ -67,4 +68,10 @@ public class ResponseMessageXmlEditor<T extends ModelItem, T2 extends XmlDocumen
     public void addEditorView(EditorView<T2> editorView) {
         super.addEditorView(editorView);
     }
+
+	@Override
+	public XmlSourceEditorView getSourceEditor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

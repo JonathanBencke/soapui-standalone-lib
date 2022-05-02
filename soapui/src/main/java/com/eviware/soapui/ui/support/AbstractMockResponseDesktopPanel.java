@@ -39,7 +39,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -158,7 +157,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
     protected JComponent buildContent() {
         moveFocusAction = new MoveFocusAction();
-        responseEditor = buildResponseEditor();
 
         JComponent responseEditorPanel = createResponseEditorPanel(responseEditor);
 
@@ -241,9 +239,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
         return true;
     }
 
-    protected MockResponseMessageEditor buildResponseEditor() {
-        return new MockResponseMessageEditor(new MockResponseXmlDocument(mockResponse));
-    }
 
     protected ModelItemXmlEditor<?, ?> buildRequestEditor() {
         return new MockRequestMessageEditor(new MockRequestXmlDocument(mockResponse));
@@ -298,52 +293,19 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
         protected XmlSourceEditorView<?> buildSourceEditor() {
             XmlSourceEditorView<?> editor = getSourceEditor();
-            RSyntaxTextArea inputArea = editor.getInputArea();
-
-            inputArea.addFocusListener(new InputAreaFocusListener());
-
-            if (UISupport.isMac()) {
-                inputArea.getInputMap().put(KeyStroke.getKeyStroke("control meta TAB"), moveFocusAction);
-            } else {
-                inputArea.getInputMap().put(KeyStroke.getKeyStroke("control alt TAB"), moveFocusAction);
-            }
-            inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
-
+           
             return editor;
         }
     }
 
     public class MockResponseMessageEditor extends ResponseMessageXmlEditor<MockResponse, XmlDocument> {
 
-        private RSyntaxTextArea inputArea;
+		public MockResponseMessageEditor(XmlDocument xmlDocument, MockResponse modelItem) {
+			super(xmlDocument, modelItem);
+			// TODO Auto-generated constructor stub
+		}
 
-        public MockResponseMessageEditor(XmlDocument document) {
-            super(document, mockResponse);
 
-            if (isBidirectional()) {
-                XmlSourceEditorView<?> editor = getSourceEditor();
-
-                inputArea = editor.getInputArea();
-                if (hasRequestEditor()) {
-                    inputArea.addFocusListener(new ResultAreaFocusListener());
-                }
-
-                if (UISupport.isMac()) {
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("control meta TAB"), moveFocusAction);
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
-                } else {
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("control alt TAB"), moveFocusAction);
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
-                }
-
-                JPopupMenu inputPopup = editor.getEditorPopup();
-                inputPopup.insert(new JSeparator(), 2);
-            }
-        }
-
-        public RSyntaxTextArea getInputArea() {
-            return inputArea;
-        }
 
     }
 

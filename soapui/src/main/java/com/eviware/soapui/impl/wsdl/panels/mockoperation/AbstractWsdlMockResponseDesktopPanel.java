@@ -106,21 +106,6 @@ public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelIte
         return super.onClose(canCancel);
     }
 
-    public class WsdlMockResponseMessageEditor extends MockResponseMessageEditor {
-        public WsdlMockResponseMessageEditor(XmlDocument document) {
-            super(document);
-
-            if (isBidirectional()) {
-                XmlSourceEditorView<?> editor = getSourceEditor();
-                JPopupMenu inputPopup = editor.getEditorPopup();
-                inputPopup.insert(wsiValidateAction, 3);
-            }
-        }
-    }
-
-    protected MockResponseMessageEditor buildResponseEditor() {
-        return new WsdlMockResponseMessageEditor(new MockResponseXmlDocument(getMockResponse()));
-    }
 
 
 }

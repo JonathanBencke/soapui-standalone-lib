@@ -124,7 +124,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
     @Override
     public void releaseEditorComponent() {
         if (groovyEditor != null) {
-            groovyEditor.release();
+            
         }
 
         groovyEditor = null;

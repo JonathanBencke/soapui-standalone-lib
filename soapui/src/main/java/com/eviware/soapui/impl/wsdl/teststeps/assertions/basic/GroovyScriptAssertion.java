@@ -234,12 +234,12 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
         }
 
         public void release() {
-            editor.release();
+           
             logger = null;
         }
 
         private void buildUI() {
-            editor = new GroovyEditor(new ScriptStepGroovyEditorModel());
+            editor = new GroovyEditor();
 
             logArea = new JLogList("Groovy Test Log");
             logArea.addLogger("ScriptAssertion." + getName(), true);
@@ -255,7 +255,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
                         return;
                     }
 
-                    editor.selectError(value);
                 }
             });
 
@@ -315,7 +314,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
             public void actionPerformed(ActionEvent e) {
                 dialog.setVisible(false);
-                setScriptText(editor.getEditArea().getText());
+                setScriptText("");
             }
         }
 
@@ -326,7 +325,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
             public void actionPerformed(ActionEvent e) {
                 dialog.setVisible(false);
-                editor.getEditArea().setText(oldScriptText);
             }
         }
 
@@ -376,7 +374,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
                     Logger groovyLog = SoapUI.ensureGroovyLog();
                     logger.addAppender(groovyLog.getAppender("GLOBAL_GROOVY_LOG"));
                     try {
-                        setScriptText(editor.getEditArea().getText());
                         String result = assertScript(exchange, new WsdlTestRunContext(testStep), logger);
                         UISupport.showInfoMessage("Script Assertion Passed" + ((result == null) ? "" : ": [" + result + "]"));
                     } finally {

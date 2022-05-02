@@ -53,7 +53,6 @@ public class JUndoableTextField extends JTextField implements Undoable, Undoable
     public JUndoableTextField(boolean addPopup) {
         this();
         if (addPopup) {
-            JTextComponentPopupMenu.add(this);
         }
     }
 

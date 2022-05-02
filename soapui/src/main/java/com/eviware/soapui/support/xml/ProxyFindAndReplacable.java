@@ -17,7 +17,6 @@
 package com.eviware.soapui.support.xml;
 
 import com.eviware.soapui.support.actions.FindAndReplaceable;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.JComponent;
 
@@ -100,11 +99,7 @@ public class ProxyFindAndReplacable implements FindAndReplaceable {
     }
 
     public void setReplaceAll(boolean isReplaceAll) {
-        if (proxytarget instanceof RSyntaxTextArea) {
-            this.isReplaceAll = isReplaceAll;
-        } else {
-            this.isReplaceAll = false;
-        }
+
     }
 
     public String getOldValue() {
@@ -124,16 +119,12 @@ public class ProxyFindAndReplacable implements FindAndReplaceable {
     }
 
     public void flushSBText() {
-        if (proxytarget instanceof RSyntaxTextArea) {
-            ((RSyntaxTextArea) proxytarget).setText(sbtartget.toString());
-        }
+
 
     }
 
     public void setCarretPosition(boolean forward) {
-        if (proxytarget instanceof RSyntaxTextArea) {
-            ((RSyntaxTextArea) proxytarget).setCaretPosition(forward ? getEnd() : getStart());
-        }
+
     }
 
     public int getStart() {

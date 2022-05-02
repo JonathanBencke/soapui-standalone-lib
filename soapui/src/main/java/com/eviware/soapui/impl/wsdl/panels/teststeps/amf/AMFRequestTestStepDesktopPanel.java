@@ -591,7 +591,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         amfRequestTestStep.removeAssertionsListener(assertionsListener);
         amfRequestTestStep.getAMFRequest().removeSubmitListener(this);
         componentEnabler.release();
-        groovyEditor.release();
         amfRequestTestStep.release();
         propertyHolderTable.release();
         this.removeAll();
@@ -940,10 +939,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
         logMessages(message, infoMessage);
 
-        if (getModelItem().getSettings().getBoolean(UISettings.AUTO_VALIDATE_RESPONSE)) {
-            responseEditor.getSourceEditor().validate();
-        }
-
         AMFRequestTestStepDesktopPanel.this.submit = null;
 
         updateStatusIcon();
@@ -968,7 +963,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         super.propertyChange(evt);
         if (evt.getPropertyName().equals(SCRIPT_PROPERTY) && !updating) {
             updating = true;
-            groovyEditor.getEditArea().setText((String) evt.getNewValue());
             updating = false;
         }
         if (evt.getPropertyName().equals(AMFRequestTestStep.STATUS_PROPERTY)) {

@@ -40,7 +40,5 @@ public abstract class ModelItemXmlEditor<T extends ModelItem, T2 extends XmlDocu
         return modelItem;
     }
 
-    public final XmlSourceEditorView getSourceEditor() {
-        return (XmlSourceEditorView) getView(XmlSourceEditorViewFactory.VIEW_ID);
-    }
+
 }

@@ -280,9 +280,6 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
         inspectorPanel.release();
         testCaseListInspectorPanel.release();
 
-        setupGroovyEditor.getEditor().release();
-        tearDownGroovyEditor.getEditor().release();
-
         testRunLog.release();
 
         getModelItem().removeTestSuiteRunListener(testSuiteRunListener);

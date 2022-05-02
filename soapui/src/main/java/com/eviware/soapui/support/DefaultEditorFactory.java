@@ -21,8 +21,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.support.EditorModel.EditorModelListener;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -38,27 +36,15 @@ public class DefaultEditorFactory implements EditorFactory {
         return new JScrollPane(textArea);
     }
 
-    public JComponent buildXmlEditor(EditorModel editorModel) {
-        RSyntaxTextArea xmlEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-        RTextScrollPane scrollPane = new RTextScrollPane(xmlEditor);
-        xmlEditor = SyntaxEditorUtil.addDefaultActions(xmlEditor, scrollPane, false);
-        xmlEditor.setText(editorModel.getEditorText());
-        xmlEditor.getDocument().addDocumentListener(new EditorModelDocumentListener(editorModel, xmlEditor));
-        UISupport.addPreviewCorner(scrollPane, false);
-        return scrollPane;
-    }
-
     public JComponent buildGroovyEditor(GroovyEditorModel editorModel) {
-        return new GroovyEditor(editorModel);
+        return new GroovyEditor();
     }
 
     private static class EditorModelDocumentListener extends DocumentListenerAdapter implements EditorModelListener {
         private EditorModel editorModel;
-        private final RSyntaxTextArea xmlEditor;
 
-        public EditorModelDocumentListener(EditorModel editorModel, RSyntaxTextArea xmlEditor) {
+        public EditorModelDocumentListener(EditorModel editorModel) {
             this.editorModel = editorModel;
-            this.xmlEditor = xmlEditor;
 
             editorModel.addEditorModelListener(this);
         }
@@ -68,9 +54,7 @@ public class DefaultEditorFactory implements EditorFactory {
         }
 
         public void editorTextChanged(String oldText, String newText) {
-            xmlEditor.getDocument().removeDocumentListener(this);
-            xmlEditor.setText(newText);
-            xmlEditor.getDocument().addDocumentListener(this);
+
         }
     }
 
@@ -95,4 +79,10 @@ public class DefaultEditorFactory implements EditorFactory {
             editorModel.setEditorText(getText(document));
         }
     }
+
+	@Override
+	public JComponent buildXmlEditor(EditorModel editorModel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

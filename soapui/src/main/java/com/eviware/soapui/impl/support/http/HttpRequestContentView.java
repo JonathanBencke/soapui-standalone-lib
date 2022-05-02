@@ -33,7 +33,6 @@ import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListen
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.XmlUtils;
 import net.sf.json.JSON;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
@@ -59,7 +58,6 @@ import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
         PropertyChangeListener {
     private final HttpRequestInterface<?> httpRequest;
-    private RSyntaxTextArea contentEditor;
     private boolean updatingRequest;
     private JComponent panel;
     private JComboBox mediaTypeCombo;
@@ -141,27 +139,6 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     protected Component buildContent() {
         JPanel contentPanel = new JPanel(new BorderLayout());
 
-        // Add popup!
-        contentEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-        SyntaxEditorUtil.setMediaType(contentEditor, httpRequest.getMediaType());
-        contentEditor.setText(httpRequest.getRequestContent());
-
-        contentEditor.getDocument().addDocumentListener(new DocumentListenerAdapter() {
-
-            @Override
-            public void update(Document document) {
-                if (!updatingRequest) {
-                    updatingRequest = true;
-                    httpRequest.setRequestContent(getText(document));
-                    updatingRequest = false;
-                }
-            }
-        });
-
-        contentPanel.add(new JScrollPane(contentEditor));
-
-        PropertyExpansionPopupListener.enable(contentEditor, httpRequest);
-
         return contentPanel;
     }
 
@@ -169,8 +146,6 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
         httpRequest.setPostQueryString(httpRequest.hasRequestBody() && httpRequest.isPostQueryString());
         postQueryCheckBox.setSelected(httpRequest.isPostQueryString());
         mediaTypeCombo.setEnabled(httpRequest.hasRequestBody() && !httpRequest.isPostQueryString());
-        contentEditor.setEnabled(httpRequest.hasRequestBody() && !httpRequest.isPostQueryString());
-        contentEditor.setEditable(httpRequest.hasRequestBody() && !httpRequest.isPostQueryString());
         postQueryCheckBox.setEnabled(httpRequest.hasRequestBody());
     }
 
@@ -206,7 +181,6 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
         mediaTypeCombo.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                SyntaxEditorUtil.setMediaType(contentEditor, e.getItem().toString());
             }
         });
         mediaTypeCombo.setEnabled(httpRequest.hasRequestBody());
@@ -225,9 +199,6 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
             if (XmlUtils.seemsToBeXml(requestBodyAsXml) &&
                     seemsToBeJsonContentType(mediaType)) {
                 JSON jsonObject = new JsonXmlSerializer().read(requestBodyAsXml);
-                contentEditor.setText(jsonObject.toString(3, 0));
-            } else {
-                contentEditor.setText(requestBodyAsXml);
             }
             updatingRequest = false;
         } else if (evt.getPropertyName().equals("method")) {
@@ -272,8 +243,6 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     }
 
     public void setEditable(boolean enabled) {
-        contentEditor.setEnabled(enabled && httpRequest.hasRequestBody());
-        contentEditor.setEditable(enabled && httpRequest.hasRequestBody());
         mediaTypeCombo.setEnabled(enabled && !httpRequest.isPostQueryString());
         postQueryCheckBox.setEnabled(enabled);
     }

@@ -81,19 +81,12 @@ public class RestMockResponseDesktopPanel extends
         return createPanelWithLabel("Http Status Code: ", createStatusCodeCombo());
     }
 
-    protected MockResponseMessageEditor buildResponseEditor() {
-        MockResponseXmlDocument documentContent = new MockResponseXmlDocument(getMockResponse());
-        MockResponseMessageEditor mockResponseMessageEditor = new MockResponseMessageEditor(documentContent);
-        SyntaxEditorUtil.setMediaType(mockResponseMessageEditor.getInputArea(), getModelItem().getMediaType());
-        return mockResponseMessageEditor;
-    }
 
     private JComponent createMediaTypeCombo() {
         MediaTypeComboBox mediaTypeComboBox = new MediaTypeComboBox(this.getModelItem());
         mediaTypeComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                SyntaxEditorUtil.setMediaType(getResponseEditor().getInputArea(), e.getItem().toString());
             }
         });
         JComponent innerPanel = createPanelWithLabel("Content | Media type: ", mediaTypeComboBox);

@@ -38,7 +38,6 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -166,7 +165,6 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
         private JButton resolveButton;
         private JCheckBox auto;
         private Handler handler;
-        private RSyntaxTextArea xsd;
         private JList schemaList;
         public static final String AUTO_INFER_SCHEMAS = "AutoInferSchemas";
         public static final String NO_NAMESPACE = "<no namespace>";
@@ -213,10 +211,7 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
             listPanel.setLayout(new BorderLayout());
             listPanel.add(toolbar, BorderLayout.NORTH);
             listPanel.add(new JScrollPane(schemaList), BorderLayout.CENTER);
-            xsd = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-            xsd.setEditable(false);
             update();
-            addTab("Schemas", new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listPanel, new JScrollPane(xsd)));
         }
 
         public synchronized boolean awaitButton(Handler handler) {
@@ -249,15 +244,7 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
                 }
             }
             schemaList.setListData(namespaces);
-            if (schemaList.isSelectionEmpty()) {
-                xsd.setText("");
-            } else {
-                xsd.setText(XmlUtils.prettyPrintXml(InferredSchemaManager.getInferredSchema(service)
-                        .getXsdForNamespace((String) schemaList.getSelectedValue())));
-                xsd.setCaretPosition(0);
-                xsd.scrollRectToVisible(new Rectangle(0, 0, (int) (getSize().getWidth()), (int) (getSize()
-                        .getHeight())));
-            }
+            
         }
 
         public void logln(String line) {
@@ -271,11 +258,6 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
                     if (namespace.equals(NO_NAMESPACE)) {
                         namespace = "";
                     }
-                    xsd.setText(XmlUtils.prettyPrintXml(InferredSchemaManager.getInferredSchema(service)
-                            .getXsdForNamespace(namespace)));
-                    xsd.setCaretPosition(0);
-                    xsd.scrollRectToVisible(new Rectangle(0, 0, (int) (getSize().getWidth()), (int) (getSize()
-                            .getHeight())));
                 }
             }
         }

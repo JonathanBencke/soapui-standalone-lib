@@ -24,7 +24,6 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import org.apache.commons.lang.StringUtils;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -209,9 +208,7 @@ public class SimpleForm {
             ((JCheckBox) component).setSelected(Boolean.valueOf(value));
         } else if (component instanceof JFormComponent) {
             ((JFormComponent) component).setValue(value);
-        } else if (component instanceof RSyntaxTextArea) {
-            ((RSyntaxTextArea) component).setText(value);
-        }
+        } 
     }
 
     public void getValues(Map<String, String> values) {
@@ -431,7 +428,6 @@ public class SimpleForm {
         textArea.add(new JScrollPane());
         setToolTip(textArea, tooltip);
         textArea.getAccessibleContext().setAccessibleDescription(tooltip);
-        JTextComponentPopupMenu.add(textArea);
         append(label, new JScrollPane(textArea));
         return textArea;
     }
@@ -463,7 +459,6 @@ public class SimpleForm {
         textField.setColumns(textFieldColumns);
         setToolTip(textField, tooltip);
         textField.getAccessibleContext().setAccessibleDescription(tooltip);
-        JTextComponentPopupMenu.add(textField);
         append(label, textField);
         return textField;
     }

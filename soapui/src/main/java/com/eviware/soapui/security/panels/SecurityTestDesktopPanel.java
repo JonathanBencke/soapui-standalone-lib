@@ -476,9 +476,6 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
         propertiesTable.release();
         inspectorPanel.release();
 
-        setupGroovyEditor.getEditor().release();
-        tearDownGroovyEditor.getEditor().release();
-
         securityTestLog.release();
         lastRunner = null;
 

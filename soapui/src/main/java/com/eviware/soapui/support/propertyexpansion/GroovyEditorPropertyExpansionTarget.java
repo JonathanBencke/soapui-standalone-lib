@@ -20,24 +20,18 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.support.UISupport;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.text.BadLocationException;
 import java.awt.Point;
 
 public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansionTarget {
-    private final RSyntaxTextArea textField;
+   
 
     public GroovyEditorPropertyExpansionTarget(GroovyEditor textField, ModelItem modelItem) {
         super(modelItem);
-        this.textField = textField.getEditArea();
     }
 
     public void insertPropertyExpansion(PropertyExpansion expansion, Point pt) {
-        int pos = pt == null ? -1 : textField.viewToModel(pt);
-        if (pos == -1) {
-            pos = textField.getCaretPosition();
-        }
 
         String name = expansion.getProperty().getName();
         String javaName = createJavaName(name);
@@ -49,18 +43,6 @@ public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansi
 
         String txt = createContextExpansion(javaName, expansion);
 
-        try {
-            int line = textField.getLineOfOffset(pos);
-            pos = textField.getLineStartOffset(line);
-
-            textField.setCaretPosition(pos);
-            textField.insert(txt, pos);
-            textField.setSelectionStart(pos);
-            textField.setSelectionEnd(pos + txt.length());
-            textField.requestFocusInWindow();
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
     }
 
     private String createJavaName(String name) {
@@ -78,7 +60,7 @@ public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansi
     }
 
     public String getValueForCreation() {
-        return textField.getSelectedText();
+        return "";
     }
 
     public String getNameForCreation() {

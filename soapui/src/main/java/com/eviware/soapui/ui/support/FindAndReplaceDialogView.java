@@ -18,9 +18,6 @@ package com.eviware.soapui.ui.support;
 
 import com.eviware.soapui.support.UISupport;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.SearchContext;
-import org.fife.ui.rtextarea.SearchEngine;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -52,17 +49,6 @@ public class FindAndReplaceDialogView extends AbstractAction {
     private JButton replaceAllButton;
     private JComboBox findCombo;
     private JComboBox replaceCombo;
-    private RSyntaxTextArea editArea;
-
-    public FindAndReplaceDialogView(RSyntaxTextArea editArea) {
-        super("Find / Replace");
-        if (UISupport.isMac()) {
-            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("meta F"));
-        } else {
-            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("control F"));
-        }
-        this.editArea = editArea;
-    }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
@@ -74,11 +60,6 @@ public class FindAndReplaceDialogView extends AbstractAction {
             buildDialog();
         }
 
-        editArea.requestFocusInWindow();
-
-        replaceCombo.setEnabled(editArea.isEditable());
-        replaceAllButton.setEnabled(editArea.isEditable());
-        replaceButton.setEnabled(editArea.isEditable());
 
         UISupport.showDialog(dialog);
         findCombo.getEditor().selectAll();
@@ -86,9 +67,7 @@ public class FindAndReplaceDialogView extends AbstractAction {
     }
 
     private void buildDialog() {
-        Window window = SwingUtilities.windowForComponent(editArea);
 
-        dialog = new JDialog(window, "Find / Replace");
         dialog.setModal(false);
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -158,13 +137,10 @@ public class FindAndReplaceDialogView extends AbstractAction {
 
         // create buttons
         ButtonBarBuilder builder = new ButtonBarBuilder();
-        findButton = new JButton(new FindAction(findCombo));
         builder.addFixed(findButton);
         builder.addRelatedGap();
-        replaceButton = new JButton(new ReplaceAction());
         builder.addFixed(replaceButton);
         builder.addRelatedGap();
-        replaceAllButton = new JButton(new ReplaceAllAction());
         builder.addFixed(replaceAllButton);
         builder.addUnrelatedGap();
         builder.addFixed(new JButton(new CloseAction(dialog)));
@@ -180,104 +156,7 @@ public class FindAndReplaceDialogView extends AbstractAction {
         UISupport.initDialogActions(dialog, null, findButton);
     }
 
-    protected SearchContext createSearchAndReplaceContext() {
-        if (findCombo.getSelectedItem() == null) {
-            return null;
-        }
-        if (replaceCombo.getSelectedItem() == null) {
-            return null;
-        }
 
-        String searchExpression = findCombo.getSelectedItem().toString();
-        String replacement = replaceCombo.getSelectedItem().toString();
-
-        SearchContext context = new SearchContext();
-        context.setSearchFor(searchExpression);
-        context.setReplaceWith(replacement);
-        context.setRegularExpression(false);
-        context.setSearchForward(forwardButton.isSelected());
-        context.setWholeWord(wholeWordCheck.isSelected());
-        context.setMatchCase(caseCheck.isSelected());
-        return context;
-    }
-
-    protected SearchContext createSearchContext() {
-        if (findCombo.getSelectedItem() == null) {
-            return null;
-        }
-
-        String searchExpression = findCombo.getSelectedItem().toString();
-
-        SearchContext context = new SearchContext();
-        context.setSearchFor(searchExpression);
-        context.setRegularExpression(false);
-        context.setSearchForward(forwardButton.isSelected());
-        context.setWholeWord(wholeWordCheck.isSelected());
-        context.setMatchCase(caseCheck.isSelected());
-        return context;
-    }
-
-    private class FindAction extends AbstractAction {
-        public FindAction(JComboBox findCombo) {
-            super("Find/Find Next");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            SearchContext context = createSearchContext();
-
-            if (context == null) {
-                return;
-            }
-
-            boolean found = SearchEngine.find(editArea, context);
-            if (!found) {
-                UISupport.showErrorMessage("String [" + context.getSearchFor() + "] not found");
-            }
-        }
-    }
-
-    private class ReplaceAction extends AbstractAction {
-        public ReplaceAction() {
-            super("Replace/Replace Next");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            SearchContext context = createSearchAndReplaceContext();
-
-            if (context == null) {
-                return;
-            }
-
-            boolean found = SearchEngine.replace(editArea, context);
-            if (!found) {
-                UISupport.showErrorMessage("String [" + context.getSearchFor() + "] not found");
-            }
-        }
-
-    }
-
-    private class ReplaceAllAction extends AbstractAction {
-        public ReplaceAllAction() {
-            super("Replace All");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            SearchContext context = createSearchAndReplaceContext();
-
-            if (context == null) {
-                return;
-            }
-
-            int replaceCount = SearchEngine.replaceAll(editArea, context);
-            if (replaceCount <= 0) {
-                UISupport.showErrorMessage("String [" + context.getSearchFor() + "] not found");
-            }
-        }
-
-    }
 
     private class CloseAction extends AbstractAction {
         final JDialog dialog;

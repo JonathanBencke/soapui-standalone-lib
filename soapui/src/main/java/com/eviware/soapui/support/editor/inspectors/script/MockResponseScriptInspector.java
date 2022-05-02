@@ -69,7 +69,7 @@ public class MockResponseScriptInspector extends AbstractXmlInspector {
     }
 
     protected void buildResponseScriptEditor() {
-        responseScriptEditor = new GroovyEditor(new MockResponseGroovyEditorModel());
+        responseScriptEditor = new GroovyEditor();
 
         panel = new JPanel(new BorderLayout());
         panel.add(buildScriptToolbar(), BorderLayout.NORTH);
@@ -97,8 +97,6 @@ public class MockResponseScriptInspector extends AbstractXmlInspector {
     @Override
     public void release() {
         super.release();
-
-        responseScriptEditor.release();
     }
 
     private class RunScriptAction extends AbstractAction {
@@ -131,7 +129,6 @@ public class MockResponseScriptInspector extends AbstractXmlInspector {
                     UISupport.showExtendedInfo("Result", "Result of MockResponse Script", msg, new Dimension(500, 400));
                 }
             } catch (Throwable e1) {
-                responseScriptEditor.selectError(e1.getMessage());
                 UISupport.showErrorMessage(e1.toString());
             }
         }

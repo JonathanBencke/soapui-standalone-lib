@@ -25,8 +25,6 @@ import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -81,8 +79,6 @@ public class ViewWsdlMockResultAction extends AbstractAction {
 
     private JComponent buildContent() {
         JTabbedPane messageTabs = new JTabbedPane();
-        messageTabs.addTab("Request", buildRequestTab());
-        messageTabs.addTab("Response", buildResponseTab());
         messageTabs.setPreferredSize(new Dimension(500, 400));
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -98,35 +94,4 @@ public class ViewWsdlMockResultAction extends AbstractAction {
         return panel;
     }
 
-    private Component buildResponseTab() {
-        RSyntaxTextArea responseArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-        responseArea.setText(XmlUtils.prettyPrintXml(result.getResponseContent()));
-        responseArea.setEditable(false);
-        responseArea.setToolTipText("Response Content");
-        responseArea.setFont(UISupport.getEditorFont());
-        RTextScrollPane scrollPane = new RTextScrollPane(responseArea);
-        scrollPane.setFoldIndicatorEnabled(true);
-        scrollPane.setLineNumbersEnabled(true);
-
-        JSplitPane split = UISupport.createVerticalSplit(new JScrollPane(JTableFactory.getInstance().makeJTable(new StringToStringsMapTableModel(
-                result.getResponseHeaders(), "Header", "Value", false))), scrollPane);
-        split.setDividerLocation(150);
-        return split;
-    }
-
-    private Component buildRequestTab() {
-        RSyntaxTextArea resultArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-        resultArea.setFont(UISupport.getEditorFont());
-        resultArea.setText(XmlUtils.prettyPrintXml(result.getMockRequest().getRequestContent()));
-        resultArea.setEditable(false);
-        resultArea.setToolTipText("Request Content");
-
-        RTextScrollPane scrollPane = new RTextScrollPane(resultArea);
-        scrollPane.setFoldIndicatorEnabled(true);
-        scrollPane.setLineNumbersEnabled(true);
-        JSplitPane split = UISupport.createVerticalSplit(new JScrollPane(JTableFactory.getInstance().makeJTable(new StringToStringsMapTableModel(
-                result.getMockRequest().getRequestHeaders(), "Header", "Value", false))), scrollPane);
-        split.setDividerLocation(150);
-        return split;
-    }
 }

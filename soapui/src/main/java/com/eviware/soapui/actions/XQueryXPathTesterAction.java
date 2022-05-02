@@ -24,7 +24,6 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -53,9 +52,7 @@ import java.lang.reflect.InvocationTargetException;
 public class XQueryXPathTesterAction extends AbstractAction {
     private JDialog dialog;
     private JSplitPane mainSplit;
-    private RSyntaxTextArea resultArea;
     private JSplitPane querySplit;
-    private RSyntaxTextArea inputArea;
     private JTextArea xqueryArea;
     private JTextArea xpathArea;
     private JTabbedPane queryTabs;
@@ -66,29 +63,7 @@ public class XQueryXPathTesterAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (dialog == null) {
-            buildDialog();
-        }
 
-        dialog.setVisible(true);
-    }
-
-    private void buildDialog() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-
-        mainSplit = UISupport.createHorizontalSplit(createQueryPanel(), createResultPanel());
-        mainSplit.setResizeWeight(0.4);
-        panel.add(mainSplit, BorderLayout.CENTER);
-        panel.add(createStatusBar(), BorderLayout.SOUTH);
-
-        dialog = new JDialog(UISupport.getMainFrame(), "XQuery / XPath Tester", false);
-        dialog.getContentPane().add(panel, BorderLayout.CENTER);
-        dialog.setPreferredSize(new Dimension(600, 400));
-        dialog.pack();
-
-        mainSplit.setDividerLocation(0.5);
-        querySplit.setDividerLocation(0.3);
     }
 
     private JPanel createToolbar() {
@@ -107,17 +82,6 @@ public class XQueryXPathTesterAction extends AbstractAction {
         JPanel panel = new JPanel(new BorderLayout());
         statusLabel = new JLabel();
         panel.add(statusLabel, BorderLayout.WEST);
-        return panel;
-    }
-
-    private JPanel createQueryPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-
-        querySplit = UISupport.createVerticalSplit(buildQueryTabs(), buildInputArea());
-        querySplit.setBorder(null);
-        querySplit.setResizeWeight(0.2);
-        panel.add(querySplit, BorderLayout.CENTER);
-
         return panel;
     }
 
@@ -145,16 +109,8 @@ public class XQueryXPathTesterAction extends AbstractAction {
         return new JScrollPane(xpathArea);
     }
 
-    private JComponent buildInputArea() {
-        inputArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-        return inputArea;
-    }
-
     private JPanel createResultPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-
-        resultArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-        panel.add(resultArea, BorderLayout.CENTER);
 
         return panel;
     }
@@ -170,7 +126,7 @@ public class XQueryXPathTesterAction extends AbstractAction {
             try {
                 // XmlObject xmlObject = XmlObject.Factory.parse(
                 // inputArea.getText() );
-                XmlObject xmlObject = XmlUtils.createXmlObject(inputArea.getText());
+                XmlObject xmlObject = XmlUtils.createXmlObject("");
                 XmlObject[] objects;
 
                 // xquery?
@@ -190,7 +146,6 @@ public class XQueryXPathTesterAction extends AbstractAction {
                     result.append("\n");
                 }
 
-                resultArea.setText(result.toString());
                 statusLabel.setText("Expression returned " + objects.length + " hits");
             } catch (Throwable e1) {
                 if (e1 instanceof RuntimeException) {
@@ -213,7 +168,7 @@ public class XQueryXPathTesterAction extends AbstractAction {
 
         public void actionPerformed(ActionEvent e) {
             try {
-                String namespaceDeclarations = XmlUtils.declareXPathNamespaces(inputArea.getText());
+                String namespaceDeclarations = XmlUtils.declareXPathNamespaces("");
                 xpathArea.setText(namespaceDeclarations + xpathArea.getText());
                 xqueryArea.setText(namespaceDeclarations + xqueryArea.getText());
             } catch (XmlException e1) {

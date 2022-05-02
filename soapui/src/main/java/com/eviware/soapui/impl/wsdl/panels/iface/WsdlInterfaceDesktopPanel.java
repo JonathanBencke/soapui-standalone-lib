@@ -54,8 +54,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlLineNumber;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.jdesktop.swingx.JXTable;
 import org.w3c.dom.Element;
 
@@ -107,7 +105,6 @@ import java.util.Map;
 public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterface> {
     private final static Logger logger = Logger.getLogger(WsdlInterfaceDesktopPanel.class);
     private JTabbedPane partTabs;
-    private List<RSyntaxTextArea> editors = new ArrayList<RSyntaxTextArea>();
     private JTree tree;
     private Map<String, DefaultMutableTreeNode> groupNodes = new HashMap<String, DefaultMutableTreeNode>();
     private Map<String, TreePath> pathMap = new HashMap<String, TreePath>();
@@ -326,7 +323,6 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
                 partTabs.removeAll();
                 tree.setSelectionRow(-1);
                 rootNode.removeAllChildren();
-                editors.clear();
                 groupNodes.clear();
                 pathMap.clear();
                 targetNamespaces.clear();
@@ -358,18 +354,6 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
                     partTabs.setSelectedIndex(item.getTabIndex());
                     statusBar.setInfo(item.getDescription());
-
-                    RSyntaxTextArea editor = editors.get(item.getTabIndex());
-                    int lineNumber = item.getLineNumber();
-                    try {
-                        if (lineNumber > 0 && editor.getLineStartOffset(lineNumber) >= 0) {
-                            editor.setCaretPosition(editor.getLineStartOffset(lineNumber));
-                        } else {
-                            editor.setCaretPosition(0);
-                        }
-                    } catch (BadLocationException e1) {
-                        SoapUI.logError(e1, "Unable to reset the caret position");
-                    }
                 }
 
                 tree.scrollPathToVisible(newLeadSelectionPath);
@@ -439,7 +423,6 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
             label.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
             panel.add(label, BorderLayout.NORTH);
 
-            RSyntaxTextArea inputArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
             StringWriter writer = new StringWriter();
             // XmlUtils.serializePretty( XmlObject.Factory.parse( content ), writer
             // );
@@ -451,23 +434,15 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
             // XmlOptions().setLoadLineNumbers() );
             XmlObject xmlObject = XmlUtils.createXmlObject(xmlString, new XmlOptions().setLoadLineNumbers());
 
-            inputArea.setText(xmlString);
-            inputArea.setEditable(false);
-            inputArea.setFont(UISupport.getEditorFont());
 
             JPanel p = new JPanel(new BorderLayout());
-            RTextScrollPane scrollPane = new RTextScrollPane(inputArea);
-            UISupport.addPreviewCorner(scrollPane, true);
-            p.add(scrollPane, BorderLayout.CENTER);
+
             panel.add(p, BorderLayout.CENTER);
             partTabs.addTab(title, panel);
 
-            if (tree != null) {
-                initInspectionTree(xmlObject, inputArea);
-            }
         }
 
-        private void initInspectionTree(XmlObject xmlObject, RSyntaxTextArea inputArea) {
+        private void initInspectionTree(XmlObject xmlObject) {
             DefaultMutableTreeNode treeRoot = rootNode;
 
             targetNamespaces.add(SchemaUtils.getTargetNamespace(xmlObject));
@@ -560,7 +535,6 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
             }
 
             tree.expandRow(0);
-            editors.add(inputArea);
         }
 
         public void finished() {

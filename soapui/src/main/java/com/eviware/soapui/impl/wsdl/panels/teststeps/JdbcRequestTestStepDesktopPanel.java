@@ -73,7 +73,6 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import org.apache.log4j.Logger;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
@@ -138,7 +137,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
     protected static final String QUERY_ELEMENT = "query";
     protected static final String STOREDPROCEDURE_ELEMENT = "stored-procedure";
     protected Connection connection;
-    protected RSyntaxTextArea queryArea;
     protected JCheckBox isStoredProcedureCheckBox;
     protected JCheckBox resultColumnsNamesToUpperCaseCheckBox;
     protected JTextField driverTextField;
@@ -456,20 +454,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
         testConnectionButton.setEnabled(enableTestConnection());
         submitButton.setEnabled(enableSubmit());
 
-        queryArea = SyntaxEditorUtil.createDefaultSQLSyntaxTextArea();
-        PropertyExpansionPopupListener.enable(queryArea, jdbcRequestTestStep);
-        queryArea.setText(jdbcRequestTestStep.getQuery());
-        JScrollPane scrollPane = new JScrollPane(queryArea);
-        scrollPane.setPreferredSize(new Dimension(400, 150));
-        configForm.append(QUERY_FIELD, scrollPane);
-        queryArea.getDocument().addDocumentListener(new DocumentListenerAdapter() {
-
-            @Override
-            public void update(Document document) {
-                jdbcRequestTestStep.setQuery(queryArea.getText());
-                submitButton.setEnabled(enableSubmit());
-            }
-        });
 
         isStoredProcedureCheckBox = configForm.appendCheckBox(STOREDPROCEDURE_FIELD,
                 "Select if this is a stored procedure", jdbcRequestTestStep.isStoredProcedure());
@@ -520,7 +504,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
                     public void run() {
                         if (UISupport.confirm("Would you like to empty current sql and properties?",
                                 "Reset query and properties")) {
-                            queryArea.setText("");
                             ((JdbcRequestTestStep) getPropertyHolderTable().getHolder()).removeAllProperties();
                         }
                     }
@@ -794,8 +777,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
         driverTextField.setEnabled(enabled);
         connStrTextField.setEnabled(enabled);
         passField.setEnabled(enabled);
-        queryArea.setEnabled(enabled);
-        queryArea.setEditable(enabled);
         isStoredProcedureCheckBox.setEnabled(enabled);
         propertiesTableComponent.setEnabled(enabled);
         testConnectionButton.setEnabled(enabled);
@@ -847,9 +828,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
         }
         logMessages(message, infoMessage);
 
-        if (getModelItem().getSettings().getBoolean(UISettings.AUTO_VALIDATE_RESPONSE)) {
-            responseEditor.getSourceEditor().validate();
-        }
 
         JdbcRequestTestStepDesktopPanel.this.submit = null;
 

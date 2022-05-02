@@ -322,8 +322,6 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject> 
 
     public boolean onClose(boolean canCancel) {
         propertiesTable.release();
-        loadScriptGroovyEditor.getEditor().release();
-        saveScriptGroovyEditor.getEditor().release();
 
         SoapUI.getNavigator().getMainTree().getModel().removeTreeModelListener(treeModelListener);
         wssTabPanel.release();

@@ -39,7 +39,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -94,6 +93,12 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
         public OneWayResponseMessageEditor(ModelItem modelItem) {
             super(new DefaultXmlDocument(), modelItem);
         }
+
+		@Override
+		public XmlSourceEditorView getSourceEditor() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 
     protected void insertButtons(JXToolBar toolbar) {
@@ -117,8 +122,6 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
             super(document);
 
             XmlSourceEditorView<?> editor = getSourceEditor();
-            RSyntaxTextArea inputArea = editor.getInputArea();
-            inputArea.getInputMap().put(KeyStroke.getKeyStroke("F5"), recreateButton.getAction());
         }
     }
 
@@ -129,10 +132,6 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
 
             XmlSourceEditorView<?> editor = getSourceEditor();
 
-            JPopupMenu inputPopup = editor.getEditorPopup();
-            inputPopup.insert(new JSeparator(), 2);
-            inputPopup.insert(wsiValidateAction, 3);
-            inputPopup.insert(new JSeparator(), 4);
         }
     }
 

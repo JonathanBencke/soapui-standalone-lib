@@ -50,8 +50,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlLineNumber;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.jdesktop.swingx.JXTable;
 import org.w3c.dom.Element;
 
@@ -94,7 +92,6 @@ import java.util.Map;
 public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> {
     private final static Logger logger = Logger.getLogger(WsdlInterfaceDesktopPanel.class);
     private JTabbedPane partTabs;
-    private List<RSyntaxTextArea> editors = new ArrayList<RSyntaxTextArea>();
     private JTree tree;
     private Map<String, DefaultMutableTreeNode> groupNodes = new HashMap<String, DefaultMutableTreeNode>();
     private Map<String, TreePath> pathMap = new HashMap<String, TreePath>();
@@ -290,18 +287,6 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
                     partTabs.setSelectedIndex(item.getTabIndex());
                     statusBar.setInfo(item.getDescription());
 
-                    RSyntaxTextArea editor = editors.get(item.getTabIndex());
-                    int lineNumber = item.getLineNumber();
-                    try {
-                        if (lineNumber > 0 && editor.getLineStartOffset(lineNumber) >= 0) {
-                            editor.setCaretPosition(editor.getLineStartOffset(lineNumber));
-                        } else {
-                            editor.setCaretPosition(0);
-                        }
-                    } catch (BadLocationException e1) {
-                        // TODO What todo?
-                        e1.printStackTrace();
-                    }
                 }
 
                 tree.scrollPathToVisible(newLeadSelectionPath);
@@ -376,7 +361,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
             label.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
             panel.add(label, BorderLayout.NORTH);
 
-            RSyntaxTextArea inputArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+            
             StringWriter writer = new StringWriter();
 
             XmlUtils.serializePretty(XmlUtils.createXmlObject(content), writer);
@@ -384,22 +369,13 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
 
             XmlObject xmlObject = XmlUtils.createXmlObject(xmlString, new XmlOptions().setLoadLineNumbers());
 
-            inputArea.setText(xmlString);
-            inputArea.setEditable(false);
 
             JPanel p = new JPanel(new BorderLayout());
-            RTextScrollPane scrollPane = new RTextScrollPane(inputArea);
-            p.add(scrollPane, BorderLayout.CENTER);
-            UISupport.addPreviewCorner(scrollPane, true);
-            panel.add(scrollPane, BorderLayout.CENTER);
             partTabs.addTab(title, panel);
 
-            if (tree != null) {
-                initInspectionTree(xmlObject, inputArea);
-            }
         }
 
-        private void initInspectionTree(XmlObject xmlObject, RSyntaxTextArea inputArea) {
+        private void initInspectionTree(XmlObject xmlObject) {
             DefaultMutableTreeNode treeRoot = rootNode;
 
             targetNamespaces.add(SchemaUtils.getTargetNamespace(xmlObject));
@@ -412,7 +388,6 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
             mapWadlItems(xmlObject, treeRoot, tabCount, wadlNsDeclaration);
 
             tree.expandRow(0);
-            editors.add(inputArea);
         }
 
         private void mapWadlItems(XmlObject xmlObject, DefaultMutableTreeNode treeRoot, int tabCount,
@@ -738,7 +713,6 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
             partTabs.removeAll();
             tree.setSelectionRow(-1);
             rootNode.removeAllChildren();
-            editors.clear();
             groupNodes.clear();
             pathMap.clear();
             targetNamespaces.clear();

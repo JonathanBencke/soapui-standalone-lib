@@ -589,9 +589,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
         propertiesTable.release();
         inspectorPanel.release();
 
-        setupGroovyEditor.getEditor().release();
-        tearDownGroovyEditor.getEditor().release();
-
         testCaseLog.release();
         lastRunner = null;
 

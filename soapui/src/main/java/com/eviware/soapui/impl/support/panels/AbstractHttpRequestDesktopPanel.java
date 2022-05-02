@@ -45,12 +45,10 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
-import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView.JEditorStatusBarTargetProxy;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import org.apache.log4j.Logger;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -404,29 +402,13 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
     public abstract class AbstractHttpRequestMessageEditor<T3 extends XmlDocument> extends
             RequestMessageXmlEditor<T2, T3> {
         private InputAreaFocusListener inputAreaFocusListener;
-        private RSyntaxTextArea inputArea;
 
         public AbstractHttpRequestMessageEditor(T3 document) {
             super(document, request);
 
             XmlSourceEditorView<?> editor = getSourceEditor();
             if (editor != null) {
-                inputArea = editor.getInputArea();
-
-                if (UISupport.isMac()) {
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("meta ENTER"), submitButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("meta X"), cancelButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl meta TAB"), moveFocusAction);
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
-                } else {
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("alt ENTER"), submitButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("alt X"), cancelButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl alt TAB"), moveFocusAction);
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
-                }
-
-                inputAreaFocusListener = new InputAreaFocusListener(editor);
-                inputArea.addFocusListener(inputAreaFocusListener);
+               
             }
 
             submitButton.setMnemonic(KeyEvent.VK_ENTER);
@@ -436,15 +418,11 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
         @Override
         public void release() {
             super.release();
-            if (inputArea != null) {
-                inputArea.removeFocusListener(inputAreaFocusListener);
-            }
         }
     }
 
     public abstract class AbstractHttpResponseMessageEditor<T3 extends XmlDocument> extends
             ResponseMessageXmlEditor<T2, T3> {
-        private RSyntaxTextArea inputArea;
         private ResultAreaFocusListener resultAreaFocusListener;
 
         public AbstractHttpResponseMessageEditor(T3 document) {
@@ -452,24 +430,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
             XmlSourceEditorView<?> editor = getSourceEditor();
 
-            inputArea = editor.getInputArea();
-            if (inputArea != null) {
-                resultAreaFocusListener = new ResultAreaFocusListener(editor);
-                inputArea.addFocusListener(resultAreaFocusListener);
-
-                if (UISupport.isMac()) {
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("meta ENTER"), submitButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("meta X"), cancelButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl meta TAB"), moveFocusAction);
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
-                } else {
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("alt ENTER"), submitButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("alt X"), cancelButton.getAction());
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl alt TAB"), moveFocusAction);
-                    inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
-                }
-            }
-
             submitButton.setMnemonic(KeyEvent.VK_ENTER);
 
         }
@@ -477,10 +437,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
         @Override
         public void release() {
             super.release();
-
-            if (inputArea != null) {
-                inputArea.removeFocusListener(resultAreaFocusListener);
-            }
         }
     }
 
@@ -494,7 +450,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
         public void focusGained(FocusEvent e) {
             responseHasFocus = false;
 
-            statusBar.setTarget(new JEditorStatusBarTargetProxy(sourceEditor.getInputArea()));
             if (!splitButton.isEnabled()) {
                 requestTabs.setSelectedIndex(0);
                 return;
@@ -535,7 +490,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
         public void focusGained(FocusEvent e) {
             responseHasFocus = true;
 
-            statusBar.setTarget(new JEditorStatusBarTargetProxy(sourceEditor.getInputArea()));
             if (!splitButton.isEnabled()) {
                 requestTabs.setSelectedIndex(1);
                 return;
@@ -686,10 +640,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
         }
 
         logMessages(message, infoMessage);
-
-        if (getModelItem().getSettings().getBoolean(UISettings.AUTO_VALIDATE_RESPONSE)) {
-            responseEditor.getSourceEditor().validate();
-        }
 
         AbstractHttpRequestDesktopPanel.this.submit = null;
     }

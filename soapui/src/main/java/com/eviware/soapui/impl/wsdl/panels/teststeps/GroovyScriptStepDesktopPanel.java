@@ -105,7 +105,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
     }
 
     private void buildUI() {
-        editor = new GroovyEditor(new ScriptStepGroovyEditorModel());
+        editor = new GroovyEditor();
 
         logArea = new JLogList("Groovy Test Log");
         logArea.addLogger(groovyStep.getName() + "#" + hashCode(), true);
@@ -121,7 +121,6 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
                     return;
                 }
 
-                editor.selectError(value);
             }
         });
 
@@ -172,7 +171,6 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 
     public boolean onClose(boolean canCancel) {
         componentEnabler.release();
-        editor.release();
         SoapUI.getSettings().removeSettingsListener(settingsListener);
         logger.removeAllAppenders();
         logger = null;
@@ -255,9 +253,6 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
                     if (er != null) {
                         String message = er.getMessage();
 
-                        // ugly...
-                        editor.selectError(message);
-
                         UISupport.showErrorMessage(StringUtils.join(result.getMessages(), "\n"));
                         editor.requestFocus();
                     } else if (result.getMessages().length > 0) {
@@ -271,7 +266,6 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(SCRIPT_PROPERTY) && !updating) {
             updating = true;
-            editor.getEditArea().setText((String) evt.getNewValue());
             updating = false;
         }
 

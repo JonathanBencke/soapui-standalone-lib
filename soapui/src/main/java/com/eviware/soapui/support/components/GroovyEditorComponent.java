@@ -50,7 +50,7 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
         this.editorModel = editorModel;
         this.helpUrl = helpUrl;
 
-        editor = new GroovyEditor(editorModel);
+        editor = new GroovyEditor();
         editor.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3),
                 editor.getBorder()));
         add(editor, BorderLayout.CENTER);
@@ -151,14 +151,12 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
         }
 
         public void actionPerformed(ActionEvent e) {
-            JPopupMenu popup = editor.getEditArea().getComponentPopupMenu();
-            popup.show(insertCodeButton, insertCodeButton.getWidth() / 2, insertCodeButton.getHeight() / 2);
+        	
         }
     }
 
     public void release() {
         editorModel.removePropertyChangeListener(this);
-        getEditor().release();
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

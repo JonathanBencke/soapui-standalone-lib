@@ -32,8 +32,6 @@ import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSAMLToken;
 import org.apache.ws.security.saml.ext.AssertionWrapper;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -52,8 +50,6 @@ public class ManualSAMLEntry extends WssEntryBase {
 
     private String samlAssertion;
 
-    private RSyntaxTextArea editor;
-
     public void init(WSSEntryConfig config, OutgoingWss container) {
         super.init(config, container, TYPE);
     }
@@ -62,25 +58,6 @@ public class ManualSAMLEntry extends WssEntryBase {
     protected JComponent buildUI() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        editor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-
-        RTextScrollPane scrollPane = new RTextScrollPane(editor);
-        scrollPane.setFoldIndicatorEnabled(true);
-        scrollPane.setLineNumbersEnabled(true);
-
-        editor = SyntaxEditorUtil.addDefaultActions(editor, scrollPane, false);
-
-        editor.setText(samlAssertion == null ? "" : samlAssertion);
-        editor.getDocument().addDocumentListener(new DocumentListenerAdapter() {
-
-            @Override
-            public void update(javax.swing.text.Document document) {
-                samlAssertion = editor.getText();
-                saveConfig();
-
-            }
-        });
-        panel.add(scrollPane, BorderLayout.CENTER);
 
         return UISupport.addTitledBorder(panel, "Enter SAML Assertion");
     }
@@ -125,9 +102,6 @@ public class ManualSAMLEntry extends WssEntryBase {
         this.samlAssertion = samlAssertion;
         saveConfig();
 
-        if (editor != null) {
-            editor.setText(samlAssertion);
-        }
     }
 
     @Override

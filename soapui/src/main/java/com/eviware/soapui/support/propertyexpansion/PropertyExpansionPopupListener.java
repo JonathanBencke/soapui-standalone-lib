@@ -44,7 +44,6 @@ import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.propertyexpansion.scrollmenu.ScrollableMenu;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -328,33 +327,6 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         return panel;
     }
 
-    public static void enable(RSyntaxTextArea textField, ModelItem modelItem) {
-        RSyntaxTextAreaPropertyExpansionTarget target = new RSyntaxTextAreaPropertyExpansionTarget(textField, modelItem);
-        DropTarget dropTarget = new DropTarget(textField, new PropertyExpansionDropTarget(target));
-        dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
-
-        JPopupMenu popup = textField.getPopupMenu();
-
-        if (popup != null) {
-            PropertyExpansionPopupListener.addMenu(popup, "Get Data...", target.getContextModelItem(), target);
-        }
-    }
-
-    public static void enable(GroovyEditor groovyEditor, ModelItem modelItem) {
-        GroovyEditorPropertyExpansionTarget target = new GroovyEditorPropertyExpansionTarget(groovyEditor, modelItem);
-        DropTarget dropTarget = new DropTarget(groovyEditor.getEditArea(), new PropertyExpansionDropTarget(target));
-        dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
-
-        JPopupMenu popup = groovyEditor.getEditArea().getComponentPopupMenu();
-
-        if (popup != null) {
-            ScrollableMenu menu = new ScrollableMenu("Get Data...");
-            popup.insert(menu, 0);
-            popup.addPopupMenuListener(new PropertyExpansionPopupListener(menu, target.getContextModelItem(), target));
-            popup.insert(new JSeparator(), 1);
-        }
-    }
-
     public static void enable(JTextComponent textField, ModelItem modelItem) {
         JPopupMenu popupMenu = textField.getComponentPopupMenu();
         if (popupMenu == null) {
@@ -366,6 +338,6 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
     }
 
     public static void enable(GroovyEditorComponent gec, ModelItem modelItem) {
-        enable(gec.getEditor(), modelItem);
+
     }
 }

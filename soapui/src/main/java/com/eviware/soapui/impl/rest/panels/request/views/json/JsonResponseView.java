@@ -27,8 +27,6 @@ import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -40,7 +38,6 @@ import java.beans.PropertyChangeListener;
 @SuppressWarnings("unchecked")
 public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener {
     private final HttpRequestInterface<?> httpRequest;
-    private RSyntaxTextArea contentEditor;
     private boolean updatingRequest;
     private JPanel panel;
 
@@ -56,7 +53,6 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
             panel = new JPanel(new BorderLayout());
 
             panel.add(UISupport.createToolbar(), BorderLayout.NORTH);
-            panel.add(buildContent(), BorderLayout.CENTER);
             panel.add(buildStatus(), BorderLayout.SOUTH);
         }
 
@@ -73,27 +69,10 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
         return new JPanel();
     }
 
-    private Component buildContent() {
-        JPanel contentPanel = new JPanel(new BorderLayout());
-
-        contentEditor = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
-        HttpResponse response = httpRequest.getResponse();
-        if (response != null) {
-            setEditorContent(response);
-        }
-
-        RTextScrollPane scrollPane = new RTextScrollPane(contentEditor);
-        scrollPane.setFoldIndicatorEnabled(true);
-        scrollPane.setLineNumbersEnabled(true);
-        contentPanel.add(scrollPane);
-        contentEditor.setEditable(false);
-
-        return contentPanel;
-    }
 
     protected void setEditorContent(HttpResponse httpResponse) {
         if (httpResponse == null || httpResponse.getContentAsString() == null) {
-            contentEditor.setText("");
+            
         } else {
             String content;
 
@@ -108,9 +87,9 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
                 } catch (JSONException e) {
                     content = httpResponse.getContentAsString();
                 }
-                contentEditor.setText(content);
+                
             } else {
-                contentEditor.setText("The content you are trying to view cannot be viewed as JSON");
+                
             }
         }
     }

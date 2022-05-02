@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="https://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.smartbear.soapui</groupId>
@@ -13,7 +13,7 @@
     <repositories>
         <repository>
             <id>smartbear-sweden-repository</id>
-            <url>http://www.soapui.org/repository/maven2</url>
+            <url>https://www.soapui.org/repository/maven2</url>
         </repository>
     </repositories>
 
@@ -105,7 +105,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <!-- http://mojo.codehaus.org/extra-enforcer-rules/enforceBytecodeVersion.html -->
+                                <!-- https://mojo.codehaus.org/extra-enforcer-rules/enforceBytecodeVersion.html -->
                                 <enforceBytecodeVersion>
                                     <maxJdkVersion>1.8</maxJdkVersion>
                                 </enforceBytecodeVersion>

@@ -26,8 +26,6 @@ import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import net.sf.json.JSON;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -41,7 +39,6 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
         PropertyChangeListener {
     private final MessageExchangeModelItem messageExchangeModelItem;
     private JPanel contentPanel;
-    private RSyntaxTextArea contentEditor;
     private boolean updatingRequest;
     private JPanel panel;
 
@@ -57,7 +54,6 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
             panel = new JPanel(new BorderLayout());
 
             panel.add(buildToolbar(), BorderLayout.NORTH);
-            panel.add(buildContent(), BorderLayout.CENTER);
             panel.add(buildStatus(), BorderLayout.SOUTH);
         }
 
@@ -75,27 +71,8 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
         return new JPanel();
     }
 
-    private Component buildContent() {
-        contentPanel = new JPanel(new BorderLayout());
-
-        contentEditor = SyntaxEditorUtil.createDefaultJsonSyntaxTextArea();
-        MessageExchange me = messageExchangeModelItem.getMessageExchange();
-        if (me != null) {
-            setEditorContent(me);
-        }
-
-        RTextScrollPane scrollPane = new RTextScrollPane(contentEditor);
-        scrollPane.setLineNumbersEnabled(true);
-        scrollPane.setFoldIndicatorEnabled(true);
-        contentPanel.add(scrollPane);
-        contentEditor.setEditable(false);
-
-        return contentPanel;
-    }
-
     protected void setEditorContent(MessageExchange me) {
         if (me == null) {
-            contentEditor.setText("");
         } else {
             String content = "<Not JSON content>";
 
@@ -115,9 +92,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
                     }
                 }
 
-                contentEditor.setText(content);
             } else {
-                contentEditor.setText("<Not JSON content>");
             }
         }
     }

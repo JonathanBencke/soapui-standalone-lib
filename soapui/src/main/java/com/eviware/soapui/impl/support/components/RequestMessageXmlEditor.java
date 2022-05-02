@@ -25,6 +25,7 @@ import com.eviware.soapui.support.editor.registry.InspectorFactory;
 import com.eviware.soapui.support.editor.registry.InspectorRegistry;
 import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
+import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
@@ -62,4 +63,10 @@ public class RequestMessageXmlEditor<T extends ModelItem, T2 extends XmlDocument
             }
         }
     }
+
+	@Override
+	public XmlSourceEditorView getSourceEditor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

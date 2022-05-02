@@ -89,7 +89,6 @@ public class JUndoableTextArea extends JTextArea implements Undoable, UndoableEd
             }
         });
 
-        JTextComponentPopupMenu.add(this);
     }
 
     public JUndoableTextArea(int i, int j) {
